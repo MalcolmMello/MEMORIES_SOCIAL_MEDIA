@@ -1,13 +1,19 @@
-import { Avatar, Button, Paper, Grid, Typography, Container, TextField } from "@material-ui/core"
+import { Avatar, Button, Paper, Grid, Typography, Container } from "@material-ui/core";
+import Icon from './icon';
+import { signInWithGoogle } from "../../Firebase";
+import { useDispatch } from 'react-redux';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import useStyles from './styles';
 import Input from './Input';
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Auth = () => {
     const classes = useStyles();
     const [showPassword, setShowPassword] = useState(false)
     const [isSignup, setIsSignup] = useState(false)
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleShowPassword = () => setShowPassword((prevShowPassword) => !prevShowPassword)
 
@@ -18,6 +24,24 @@ const Auth = () => {
     const handleChange = () => {
 
     };
+
+    const handleGoogleSignIn = () => {
+        signInWithGoogle()
+        .then((res) => {
+            const response = res?.user
+            const token = res?.user?.accessToken
+            try {
+                dispatch({type: 'AUTH', data: { response, token }});
+
+                navigate('/')
+            } catch (error) {
+                console.log(error)
+            }
+        })
+        .catch((error) => {
+            console.log(error)
+        });
+    }
 
     const switchMode = () => {
         setIsSignup((prevIsSignup) => !prevIsSignup);
@@ -46,6 +70,9 @@ const Auth = () => {
                         { isSignup && <Input name="confirmPassword" label="Repeat Password" handleChange={handleChange} type="password" />}
                         <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
                             {isSignup ? 'Sign Up' : 'Sign In'}
+                        </Button>
+                        <Button onClick={handleGoogleSignIn} variant="contained" fullWidth color="primary" className={classes.googleButton} startIcon={<Icon />}>
+                            Sign In With Google
                         </Button>
                         <Grid container justify="flex-end">
                             <Grid item>
