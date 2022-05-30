@@ -7,22 +7,31 @@ import useStyles from './styles';
 import Input from './Input';
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { signin, signup } from '../../actions/auth'
+
+const initialState = { firstName: '', lastName: '', email: '', password: '', confirmPassword: '' }
 
 const Auth = () => {
     const classes = useStyles();
     const [showPassword, setShowPassword] = useState(false)
     const [isSignup, setIsSignup] = useState(false)
+    const [formData, setFormData] = useState(initialState)
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const handleShowPassword = () => setShowPassword((prevShowPassword) => !prevShowPassword)
 
-    const handleSubmit = () => {
-
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if(isSignup) {
+            dispatch(signup(formData, navigate))
+        } else {
+            dispatch(signin(formData, navigate))
+        }
     };
 
-    const handleChange = () => {
-
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value })
     };
 
     const handleGoogleSignIn = () => {
@@ -61,7 +70,7 @@ const Auth = () => {
                             isSignup && (
                                 <>
                                     <Input name="firstName" label="First Name" handleChange={handleChange} autoFocus half />
-                                    <Input name="firstName" label="First Name" handleChange={handleChange} half />
+                                    <Input name="lastName" label="Last Name" handleChange={handleChange} half />
                                 </>
                             )
                         }
