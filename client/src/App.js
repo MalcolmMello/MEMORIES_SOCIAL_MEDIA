@@ -11,7 +11,7 @@ const App = () => {
     const user = JSON.parse(localStorage.getItem('profile'))
     return (
         <BrowserRouter>
-            <Container maxidth='xl'>
+            <Container maxWidth='xl'>
                 <Navbar />
                 <Routes>
                     <Route path='/' exact element={ <Navigate to="/posts" />}/>

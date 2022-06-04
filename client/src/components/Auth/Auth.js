@@ -80,9 +80,9 @@ const Auth = () => {
                         <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
                             {isSignup ? 'Sign Up' : 'Sign In'}
                         </Button>
-                        <Button onClick={handleGoogleSignIn} variant="contained" fullWidth color="primary" className={classes.googleButton} startIcon={<Icon />}>
+                        {/*<Button onClick={handleGoogleSignIn} variant="contained" fullWidth color="primary" className={classes.googleButton} startIcon={<Icon />}>
                             Sign In With Google
-                        </Button>
+                    </Button>*/}
                         <Grid container justify="flex-end">
                             <Grid item>
                                 <Button onClick={switchMode}>
