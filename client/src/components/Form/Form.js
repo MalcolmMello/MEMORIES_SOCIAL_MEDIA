@@ -3,14 +3,16 @@ import { TextField, Button, Typography, Paper } from "@material-ui/core";
 import FileBase from 'react-file-base64';
 import { useDispatch, useSelector } from 'react-redux';
 import { createPost, updatePost } from "../../actions/posts";
+import { useNavigate } from "react-router-dom";
 
 import useStyles from './styles';
 
 const Form = ({ currentId, setCurrentId }) => {
     const [postData, setPostData] = useState({ title: '', message: '', tags: '', selectedFile: '' }); 
-    const post = useSelector((state) => currentId ? state.posts.find((p) => p._id === currentId) : null);
+    const post = useSelector((state) => currentId ? state.posts.posts.find((p) => p._id === currentId) : null);
     const classes = useStyles();
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const user = JSON.parse(localStorage.getItem('profile'));
 
     useEffect(() => {
@@ -20,7 +22,7 @@ const Form = ({ currentId, setCurrentId }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if(currentId === null ) {
-            await dispatch(createPost({ ...postData, name: user?.response?.displayName || user?.result?.name}));
+            await dispatch(createPost({ ...postData, name: user?.response?.displayName || user?.result?.name}, navigate));
             clear();
         } else {
             await dispatch(updatePost(currentId, { ...postData, name: user?.response?.displayName || user?.result?.name}));
@@ -34,7 +36,7 @@ const Form = ({ currentId, setCurrentId }) => {
     };
 
     if(!user?.result?.name) {
-        if(user?.response?.displayName) {
+        if(!user?.response?.displayName) {
             return (
                 <Paper className={classes.paper}>
                     <Typography variant="h6" align="center">
